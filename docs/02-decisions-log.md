@@ -47,6 +47,8 @@
 | 総ページ数の算出 | ハードコードせず、`generateStaticParams()`実行時・Webhook再検証時それぞれで公開APIの総記事数から動的に算出する |
 | タグリンクのプリフェッチ | `TagList.tsx`の全リンクに`prefetch={true}`を指定し、ビューポートに関係なく全タグページを即座にRouter Cacheへ先読みする。[docs/frontend/component-types.md](./frontend/component-types.md)参照 |
 
+| 実装ロードマップ | 確定。[docs/04-implementation-roadmap.md](./04-implementation-roadmap.md) 参照。機能ごとの縦切り（管理画面→公開ページの順）で進め、コミットは機能単位・5ファイル前後。進捗はそのファイルのチェックボックスで管理 |
+
 ## 未決定（これから詰める項目）
 
 なし。設計はひととおり決定済み。実装フェーズへ進める。
