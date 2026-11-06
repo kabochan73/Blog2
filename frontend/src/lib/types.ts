@@ -8,6 +8,20 @@ export type Tag = {
   count: number;
 };
 
+export type PostStatus = "draft" | "published";
+
+export type Post = {
+  slug: string;
+  title: string;
+  status: PostStatus;
+  excerpt: string | null;
+  content: string;
+  thumbnail: string | null;
+  tags: string[];
+  created_at: string;
+  updated_at: string;
+};
+
 /** Shape of a Laravel API Resource collection response: { data: T[] }. */
 export type ApiCollection<T> = {
   data: T[];
