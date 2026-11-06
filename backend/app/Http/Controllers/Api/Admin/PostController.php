@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostAdminResource;
 use App\Models\Post;
 use App\Models\Tag;
@@ -52,16 +53,21 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdatePostRequest $request, Post $post)
     {
-        //
+        $post->update($request->safe()->except('tags'));
+        $post->tags()->sync(Tag::whereIn('name', $request->safe()->input('tags', []))->pluck('id'));
+
+        return new PostAdminResource($post->load('tags'));
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Post $post)
     {
-        //
+        $post->delete();
+
+        return response()->noContent();
     }
 }
