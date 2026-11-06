@@ -32,7 +32,7 @@
 | `PostForm.tsx` | CC | フォーム状態、`@uiw/react-md-editor`、保存時の`useMutation` |
 | `TagPicker.tsx` | CC | タグの複数選択。タグ一覧取得も内部で`useQuery` |
 | `ImageUploader.tsx` | CC | ファイル選択・アップロード・プレビュー |
-| `AdminNav.tsx` | CC | `admin/layout.tsx`（CC）の中で使われるため、実質的にクライアントツリーの一部 |
+| `AdminHeader.tsx` | CC | `usePathname`で現在地を判定してタブをハイライトするため。`admin/layout.tsx`（CC）の中で使われる |
 
 ### データ取得にTanStack Queryを使う理由
 

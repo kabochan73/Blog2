@@ -20,7 +20,7 @@
 **frontend**
 - [x] 7. APIクライアント基盤: `lib/api.ts`, `lib/types.ts`, `.env.local.example`
 - [x] 8. ログイン画面: `lib/auth.ts`, `login/page.tsx`
-- [x] 9. 管理画面ガード: `admin/layout.tsx`, `AdminNav.tsx`
+- [x] 9. 管理画面ガード: `admin/layout.tsx`, `AdminHeader.tsx`（後にサイドバー形式の`AdminNav.tsx`から、ヘッダー形式＋Articles配下の公開記事/下書きタブ切り替えに変更）
 
 ## フェーズ3: タグ管理
 

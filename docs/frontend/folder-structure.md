@@ -37,7 +37,7 @@ frontend/
 │   │       ├── PostForm.tsx                # 作成・編集で共用（@uiw/react-md-editor）
 │   │       ├── TagPicker.tsx
 │   │       ├── ImageUploader.tsx
-│   │       └── AdminNav.tsx
+│   │       └── AdminHeader.tsx             # Articles/Tags/Logout、Articles配下で公開記事/下書きタブを表示
 │   ├── hooks/                               # カスタムフック（データ取得・変更ロジック）
 │   │   └── admin/
 │   │       └── useTagsAdmin.ts
