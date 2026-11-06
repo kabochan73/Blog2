@@ -17,8 +17,7 @@ class TagAdminResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            // TODO: replace with a real count once posts/post_tag exist (phase 4).
-            'count' => 0,
+            'count' => $this->posts_count,
         ];
     }
 }

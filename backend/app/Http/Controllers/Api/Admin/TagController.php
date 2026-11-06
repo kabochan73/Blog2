@@ -16,7 +16,7 @@ class TagController extends Controller
      */
     public function index()
     {
-        return TagAdminResource::collection(Tag::orderBy('name')->get());
+        return TagAdminResource::collection(Tag::withCount('posts')->orderBy('name')->get());
     }
 
     /**
@@ -24,7 +24,7 @@ class TagController extends Controller
      */
     public function store(StoreTagRequest $request)
     {
-        $tag = Tag::create($request->validated());
+        $tag = Tag::create($request->validated())->loadCount('posts');
 
         return (new TagAdminResource($tag))->response()->setStatusCode(Response::HTTP_CREATED);
     }
@@ -36,7 +36,7 @@ class TagController extends Controller
     {
         $tag->update($request->validated());
 
-        return new TagAdminResource($tag);
+        return new TagAdminResource($tag->loadCount('posts'));
     }
 
     /**
