@@ -16,7 +16,7 @@
 ```json
 {
   "title": "string（必須）",
-  "slug": "string（任意。省略時は自動生成）",
+  "slug": "string（必須。管理者が手入力）",
   "status": "draft | published（必須）",
   "tags": ["string", "..."],
   "thumbnail": "string（任意。画像アップロードAPIで得たURL）",
