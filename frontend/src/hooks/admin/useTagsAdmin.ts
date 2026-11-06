@@ -1,15 +1,12 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { useTagsList } from "@/hooks/admin/useTagsList";
 import { adminApiFetch } from "@/lib/api";
-import type { ApiCollection, ApiResource, Tag } from "@/lib/types";
+import type { ApiResource, Tag } from "@/lib/types";
 
 export function useTagsAdmin() {
   const queryClient = useQueryClient();
-
-  const tagsQuery = useQuery({
-    queryKey: ["tags"],
-    queryFn: () => adminApiFetch<ApiCollection<Tag>>("/api/admin/tags"),
-  });
+  const tagsQuery = useTagsList();
 
   const invalidateTags = () => queryClient.invalidateQueries({ queryKey: ["tags"] });
 
