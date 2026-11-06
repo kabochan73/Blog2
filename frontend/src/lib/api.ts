@@ -64,3 +64,11 @@ export async function adminApiFetch<T>(path: string, options: ApiFetchOptions = 
     throw err;
   }
 }
+
+/** Pulls Laravel's validation/error "message" out of a caught error, for display in a form. */
+export function extractErrorMessage(err: unknown): string {
+  if (err instanceof ApiError && err.body && typeof err.body === "object" && "message" in err.body) {
+    return String((err.body as { message: unknown }).message);
+  }
+  return "エラーが発生しました";
+}

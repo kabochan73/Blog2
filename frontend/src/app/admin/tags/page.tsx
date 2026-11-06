@@ -3,15 +3,8 @@
 import { type FormEvent, useState } from "react";
 
 import { useTagsAdmin } from "@/hooks/admin/useTagsAdmin";
-import { ApiError } from "@/lib/api";
+import { extractErrorMessage } from "@/lib/api";
 import type { Tag } from "@/lib/types";
-
-function extractErrorMessage(err: unknown): string {
-  if (err instanceof ApiError && err.body && typeof err.body === "object" && "message" in err.body) {
-    return String((err.body as { message: unknown }).message);
-  }
-  return "エラーが発生しました";
-}
 
 export default function AdminTagsPage() {
   const { tagsQuery, createTag, updateTag, deleteTag } = useTagsAdmin();
