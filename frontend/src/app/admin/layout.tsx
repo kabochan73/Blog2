@@ -1,27 +1,11 @@
-"use client";
+import type { ReactNode } from "react";
 
-import { useRouter } from "next/navigation";
-import { type ReactNode, useEffect } from "react";
+import AdminShell from "@/components/admin/AdminShell";
 
-import AdminHeader from "@/components/admin/AdminHeader";
-import Providers from "@/components/Providers";
-import { getToken } from "@/lib/auth";
+// /admin/* is always client-rendered behind a localStorage-token guard (see AdminShell),
+// never a static shell, so it's exempt from Cache Components' instant-navigation validation.
+export const instant = false;
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!getToken()) {
-      router.replace("/login");
-    }
-  }, [router]);
-
-  return (
-    <Providers>
-      <div className="min-h-screen">
-        <AdminHeader />
-        <main className="p-6">{children}</main>
-      </div>
-    </Providers>
-  );
+  return <AdminShell>{children}</AdminShell>;
 }
