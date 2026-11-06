@@ -13,24 +13,24 @@
 ## フェーズ2: 認証
 
 **backend**
-- [ ] 4. DB＋User: `personal_access_tokens`マイグレーション, `User.php`（HasApiTokens）, `config/sanctum.php`
-- [ ] 5. 管理者seed: `AdminUserSeeder.php`, `DatabaseSeeder.php`, `.env.example`更新
-- [ ] 6. ログインAPI: `Api/AuthController.php`, `LoginRequest.php`, `routes/api.php`追加, `config/cors.php`
+- [x] 4. DB＋User: `personal_access_tokens`マイグレーション, `User.php`（HasApiTokens）, `config/sanctum.php`
+- [x] 5. 管理者seed: `AdminUserSeeder.php`, `DatabaseSeeder.php`, `.env.example`更新
+- [x] 6. ログインAPI: `Api/AuthController.php`, `LoginRequest.php`, `routes/api.php`追加, `config/cors.php`
 
 **frontend**
-- [ ] 7. APIクライアント基盤: `lib/api.ts`, `lib/types.ts`, `.env.local.example`
-- [ ] 8. ログイン画面: `lib/auth.ts`, `login/page.tsx`
-- [ ] 9. 管理画面ガード: `admin/layout.tsx`, `AdminNav.tsx`
+- [x] 7. APIクライアント基盤: `lib/api.ts`, `lib/types.ts`, `.env.local.example`
+- [x] 8. ログイン画面: `lib/auth.ts`, `login/page.tsx`
+- [x] 9. 管理画面ガード: `admin/layout.tsx`, `AdminNav.tsx`
 
 ## フェーズ3: タグ管理
 
 **backend**
-- [ ] 10. DB: `tags`マイグレーション, `Tag.php`
-- [ ] 11. 管理タグAPI: `Admin/TagController.php`, `StoreTagRequest.php`, `UpdateTagRequest.php`, `TagAdminResource.php`, routes追加
+- [x] 10. DB: `tags`マイグレーション, `Tag.php`
+- [x] 11. 管理タグAPI: `Admin/TagController.php`, `StoreTagRequest.php`, `UpdateTagRequest.php`, `TagAdminResource.php`, routes追加
 
 **frontend**
-- [ ] 12. TanStack Query導入: `QueryClientProvider`設定, `lib/queryClient.ts`, ルートlayoutへの組み込み
-- [ ] 13. タグ管理画面: `admin/tags/page.tsx`＋フォーム部分のコンポーネント
+- [x] 12. TanStack Query導入: `QueryClientProvider`設定, `lib/queryClient.ts`, `admin/layout.tsx`への組み込み（公開ページには影響させないため、ルートlayoutではなくadmin配下のみ）
+- [x] 13. タグ管理画面: `admin/tags/page.tsx`＋データ取得・変更ロジックは`useTagsAdmin.ts`に分離
 
 ## フェーズ4: 記事CRUD
 

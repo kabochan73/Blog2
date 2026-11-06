@@ -2,10 +2,9 @@
 
 import { type FormEvent, useState } from "react";
 
+import { useTagsAdmin } from "@/hooks/admin/useTagsAdmin";
 import { ApiError } from "@/lib/api";
 import type { Tag } from "@/lib/types";
-
-import { useTagsAdmin } from "./useTagsAdmin";
 
 function extractErrorMessage(err: unknown): string {
   if (err instanceof ApiError && err.body && typeof err.body === "object" && "message" in err.body) {

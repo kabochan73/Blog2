@@ -38,6 +38,9 @@ frontend/
 │   │       ├── TagPicker.tsx
 │   │       ├── ImageUploader.tsx
 │   │       └── AdminNav.tsx
+│   ├── hooks/                               # カスタムフック（データ取得・変更ロジック）
+│   │   └── admin/
+│   │       └── useTagsAdmin.ts
 │   └── lib/
 │       ├── api.ts                          # 公開APIと管理APIのfetchラッパー
 │       ├── auth.ts                         # トークンのlocalStorage読み書き
@@ -59,3 +62,4 @@ frontend/
 - 管理画面はClient Component中心。`localStorage`のトークンを使って管理APIを直接fetch（[docs/backend/auth.md](../backend/auth.md)の方針どおり）
 - `middleware.ts`は作らない。トークンは`localStorage`にしかなく、Next.jsのmiddlewareは実行時にlocalStorageへアクセスできないため、認証チェックは`admin/layout.tsx`内のクライアント側ガードのみで行う（本当の防御線はバックエンドの`auth:sanctum`）
 - `PostForm.tsx`は新規作成・編集の両方で使い回す
+- `app/`配下にはNext.jsのルーティング用ファイル（`page.tsx`, `layout.tsx`, `sitemap.ts`など）だけを置く。カスタムフックなどのロジックは`hooks/`（ページ専用でも、対応する`app/`のサブパスに合わせたサブフォルダに置く）に分離する
