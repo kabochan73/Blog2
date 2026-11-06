@@ -35,15 +35,15 @@
 ## フェーズ4: 記事CRUD
 
 **backend**
-- [ ] 14. DB: `posts`/`post_tag`マイグレーション, `Post.php`（リレーション）, `Tag.php`更新
-- [ ] 15. 管理記事API（読み取り・作成）: `Admin/PostController.php`(index/show/store), `StorePostRequest.php`, `PostAdminResource.php`, routes追加
-- [ ] 16. 管理記事API（更新・削除）: `Admin/PostController.php`(update/destroy追加), `UpdatePostRequest.php`
+- [x] 14. DB: `posts`/`post_tag`マイグレーション, `Post.php`（リレーション）, `Tag.php`更新
+- [x] 15. 管理記事API（読み取り・作成）: `Admin/PostController.php`(index/show/store), `StorePostRequest.php`, `PostAdminResource.php`, routes追加
+- [x] 16. 管理記事API（更新・削除）: `Admin/PostController.php`(update/destroy追加), `UpdatePostRequest.php`（routes/api.phpは`apiResource`に統一）
 
 **frontend**
-- [ ] 17. 一覧画面: `admin/posts/page.tsx`, `admin/drafts/page.tsx`, `Post`型追加
-- [ ] 18. タグ選択UI: `TagPicker.tsx`
-- [ ] 19. 記事フォーム＋新規作成: `PostForm.tsx`, `admin/posts/new/page.tsx`
-- [ ] 20. 編集・削除: `admin/posts/[slug]/edit/page.tsx`
+- [x] 17. 一覧画面: `admin/posts/page.tsx`, `admin/drafts/page.tsx`, `Post`型追加（一覧表示は共通の`PostList.tsx`に切り出し）
+- [x] 18. タグ選択UI: `TagPicker.tsx`（`useTagsList.ts`を切り出し、`useTagsAdmin.ts`と共用）
+- [x] 19. 記事フォーム＋新規作成: `PostForm.tsx`, `admin/posts/new/page.tsx`（`useCreatePost.ts`で作成ロジックを分離）
+- [x] 20. 編集・削除: `admin/posts/[slug]/edit/page.tsx`（ガード処理を`AdminShell.tsx`に分離、`admin/layout.tsx`は`instant = false`を設定したServer Componentに）
 
 ## フェーズ5: 画像アップロード
 

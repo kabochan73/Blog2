@@ -23,7 +23,7 @@
 | ファイル | SC/CC | 理由 |
 |---|---|---|
 | `login/page.tsx` | CC | フォーム状態・ログインAPI呼び出し・`localStorage`書き込み・リダイレクトが必要 |
-| `admin/layout.tsx` | CC | マウント時に`localStorage`のトークンを確認し、無ければ`/login`へリダイレクト（ブラウザAPI必須） |
+| `admin/layout.tsx` | **SC** | ルーティング専用。`export const instant = false`でCache Components検証を除外するため、Client Componentにはできない（詳細は[docs/frontend/folder-structure.md](./folder-structure.md)） |
 | `admin/posts/page.tsx`（公開記事一覧） | CC | `useQuery`で一覧取得 |
 | `admin/drafts/page.tsx`（下書き一覧） | CC | 同上 |
 | `admin/posts/new/page.tsx` | CC | `PostForm`を作成モードで表示 |
@@ -32,7 +32,8 @@
 | `PostForm.tsx` | CC | フォーム状態、`@uiw/react-md-editor`、保存時の`useMutation` |
 | `TagPicker.tsx` | CC | タグの複数選択。タグ一覧取得も内部で`useQuery` |
 | `ImageUploader.tsx` | CC | ファイル選択・アップロード・プレビュー |
-| `AdminHeader.tsx` | CC | `usePathname`で現在地を判定してタブをハイライトするため。`admin/layout.tsx`（CC）の中で使われる |
+| `AdminShell.tsx` | CC | マウント時に`localStorage`のトークンを確認し、無ければ`/login`へリダイレクト（ブラウザAPI必須）。`admin/layout.tsx`（SC）から`children`を受け取って描画する |
+| `AdminHeader.tsx` | CC | `usePathname`で現在地を判定してタブをハイライトするため。`AdminShell.tsx`の中で使われる |
 
 ### データ取得にTanStack Queryを使う理由
 

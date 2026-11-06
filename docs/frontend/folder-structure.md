@@ -20,7 +20,7 @@ frontend/
 │   │   │   │   └── page/[n]/page.tsx       # タグ別一覧のページ送り
 │   │   │   └── sitemap.ts                  # /sitemap.xml
 │   │   └── admin/
-│   │       ├── layout.tsx                  # 配下は全部「認証済み前提」で例外なくガード
+│   │       ├── layout.tsx                  # ルーティング専用のServer Component。instant=falseでCache Components検証を除外
 │   │       ├── posts/
 │   │       │   ├── page.tsx                # 公開記事一覧
 │   │       │   ├── new/page.tsx            # 新規作成
@@ -37,10 +37,16 @@ frontend/
 │   │       ├── PostForm.tsx                # 作成・編集で共用（@uiw/react-md-editor）
 │   │       ├── TagPicker.tsx
 │   │       ├── ImageUploader.tsx
-│   │       └── AdminHeader.tsx             # Articles/Tags/Logout、Articles配下で公開記事/下書きタブを表示
+│   │       ├── AdminHeader.tsx             # Articles/Tags/Logout、Articles配下で公開記事/下書きタブを表示
+│   │       └── AdminShell.tsx              # 認証ガード＋Providers＋AdminHeaderの実体（admin/layout.tsxから分離したClient Component）
 │   ├── hooks/                               # カスタムフック（データ取得・変更ロジック）
 │   │   └── admin/
-│   │       └── useTagsAdmin.ts
+│   │       ├── useTagsAdmin.ts
+│   │       ├── useTagsList.ts
+│   │       ├── usePostsAdmin.ts
+│   │       ├── usePostAdmin.ts
+│   │       ├── useCreatePost.ts
+│   │       └── useUpdatePost.ts / useDeletePost.ts
 │   └── lib/
 │       ├── api.ts                          # 公開APIと管理APIのfetchラッパー
 │       ├── auth.ts                         # トークンのlocalStorage読み書き
@@ -60,6 +66,7 @@ frontend/
 - ページ送りはクエリパラメータではなくパスベース（`page/[n]`）。`/`は`page/1`相当の内容を描画する別ファイルだが、表示ロジックは共通化する（[docs/frontend/rendering-strategy.md](./rendering-strategy.md)参照）
 - frontendはVercelにデプロイするため、Dockerfile・Nginx設定は不要（[docs/infra/vercel.md](../infra/vercel.md)参照）
 - 管理画面はClient Component中心。`localStorage`のトークンを使って管理APIを直接fetch（[docs/backend/auth.md](../backend/auth.md)の方針どおり）
-- `middleware.ts`は作らない。トークンは`localStorage`にしかなく、Next.jsのmiddlewareは実行時にlocalStorageへアクセスできないため、認証チェックは`admin/layout.tsx`内のクライアント側ガードのみで行う（本当の防御線はバックエンドの`auth:sanctum`）
+- `middleware.ts`は作らない。トークンは`localStorage`にしかなく、Next.jsのmiddlewareは実行時にlocalStorageへアクセスできないため、認証チェックは`AdminShell.tsx`内のクライアント側ガードのみで行う（本当の防御線はバックエンドの`auth:sanctum`）
+- `admin/layout.tsx`はルーティング専用のServer Component（`export const instant = false`）とし、実際のガード・Providers・ヘッダー描画は`components/admin/AdminShell.tsx`（Client Component）に分離する。理由: Next.js 16の「Cache Components」は`usePathname()`のような実行時依存の値を使うコンポーネントがレイアウト配下にあると、そのレイアウト配下の全ページが静的プリレンダー不可と判定してしまう。管理画面は元々常に動的（認証必須・クライアントサイドのみ）なので、`instant = false`で検証自体を除外するのが正しい（`instant`はClient Componentには書けない制約があるため、ルーティング用のServer ComponentレイヤーとClient Component本体を分離する必要がある）
 - `PostForm.tsx`は新規作成・編集の両方で使い回す
 - `app/`配下にはNext.jsのルーティング用ファイル（`page.tsx`, `layout.tsx`, `sitemap.ts`など）だけを置く。カスタムフックなどのロジックは`hooks/`（ページ専用でも、対応する`app/`のサブパスに合わせたサブフォルダに置く）に分離する
