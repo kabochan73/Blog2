@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { type FormEvent, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 
 import TagPicker from "@/components/admin/TagPicker";
 import type { PostStatus } from "@/lib/types";
@@ -41,15 +41,16 @@ type PostFormProps = {
 };
 
 export default function PostForm({ initialValues, submitLabel, onSubmit, isSubmitting, error }: PostFormProps) {
-  const [values, setValues] = useState<PostFormValues>(initialValues ?? EMPTY_VALUES);
-
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    onSubmit(values);
-  }
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    control,
+    formState: { errors },
+  } = useForm<PostFormValues>({ defaultValues: initialValues ?? EMPTY_VALUES });
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-3xl space-y-5">
+    <form onSubmit={handleSubmit(onSubmit)} className="max-w-3xl space-y-5">
       <div className="space-y-1">
         <label htmlFor="title" className="block text-sm font-medium">
           タイトル
@@ -57,11 +58,10 @@ export default function PostForm({ initialValues, submitLabel, onSubmit, isSubmi
         <input
           id="title"
           type="text"
-          required
-          value={values.title}
-          onChange={(event) => setValues({ ...values, title: event.target.value })}
+          {...register("title", { required: "タイトルを入力してください" })}
           className="w-full rounded border border-gray-300 px-3 py-2 text-sm"
         />
+        {errors.title && <p className="text-xs text-red-600">{errors.title.message}</p>}
       </div>
 
       <div className="space-y-1">
@@ -71,33 +71,25 @@ export default function PostForm({ initialValues, submitLabel, onSubmit, isSubmi
         <input
           id="slug"
           type="text"
-          required
-          pattern="^[a-z0-9-]+$"
-          value={values.slug}
-          onChange={(event) => setValues({ ...values, slug: normalizeSlug(event.target.value) })}
+          {...register("slug", {
+            required: "スラッグを入力してください",
+            pattern: { value: /^[a-z0-9-]+$/, message: "半角英数字とハイフンのみ使用できます" },
+          })}
+          onChange={(event) => setValue("slug", normalizeSlug(event.target.value), { shouldValidate: true })}
           className="w-full rounded border border-gray-300 px-3 py-2 text-sm"
         />
+        {errors.slug && <p className="text-xs text-red-600">{errors.slug.message}</p>}
       </div>
 
       <div className="space-y-1">
         <span className="block text-sm font-medium">ステータス</span>
         <div className="flex gap-4 text-sm">
           <label className="flex items-center gap-1.5">
-            <input
-              type="radio"
-              name="status"
-              checked={values.status === "draft"}
-              onChange={() => setValues({ ...values, status: "draft" })}
-            />
+            <input type="radio" value="draft" {...register("status")} />
             下書き
           </label>
           <label className="flex items-center gap-1.5">
-            <input
-              type="radio"
-              name="status"
-              checked={values.status === "published"}
-              onChange={() => setValues({ ...values, status: "published" })}
-            />
+            <input type="radio" value="published" {...register("status")} />
             公開
           </label>
         </div>
@@ -105,7 +97,11 @@ export default function PostForm({ initialValues, submitLabel, onSubmit, isSubmi
 
       <div className="space-y-1">
         <span className="block text-sm font-medium">タグ</span>
-        <TagPicker value={values.tags} onChange={(tags) => setValues({ ...values, tags })} />
+        <Controller
+          name="tags"
+          control={control}
+          render={({ field }) => <TagPicker value={field.value} onChange={field.onChange} />}
+        />
       </div>
 
       <div className="space-y-1">
@@ -115,8 +111,7 @@ export default function PostForm({ initialValues, submitLabel, onSubmit, isSubmi
         <input
           id="thumbnail"
           type="text"
-          value={values.thumbnail}
-          onChange={(event) => setValues({ ...values, thumbnail: event.target.value })}
+          {...register("thumbnail")}
           className="w-full rounded border border-gray-300 px-3 py-2 text-sm"
         />
       </div>
@@ -128,19 +123,22 @@ export default function PostForm({ initialValues, submitLabel, onSubmit, isSubmi
         <textarea
           id="excerpt"
           rows={2}
-          value={values.excerpt}
-          onChange={(event) => setValues({ ...values, excerpt: event.target.value })}
+          {...register("excerpt")}
           className="w-full rounded border border-gray-300 px-3 py-2 text-sm"
         />
       </div>
 
       <div className="space-y-1" data-color-mode="light">
         <span className="block text-sm font-medium">本文</span>
-        <MDEditor
-          value={values.content}
-          onChange={(value) => setValues({ ...values, content: value ?? "" })}
-          height={400}
+        <Controller
+          name="content"
+          control={control}
+          rules={{ validate: (value) => value.trim().length > 0 || "本文を入力してください" }}
+          render={({ field }) => (
+            <MDEditor value={field.value} onChange={(value) => field.onChange(value ?? "")} height={400} />
+          )}
         />
+        {errors.content && <p className="text-xs text-red-600">{errors.content.message}</p>}
       </div>
 
       {error && <p className="text-sm text-red-600">{error}</p>}

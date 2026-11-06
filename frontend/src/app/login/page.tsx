@@ -1,28 +1,34 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { type FormEvent, useState } from "react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 import { ApiError, apiFetch } from "@/lib/api";
 import { setToken } from "@/lib/auth";
 import type { LoginResponse } from "@/lib/types";
 
+type LoginFormValues = {
+  email: string;
+  password: string;
+};
+
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormValues>();
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  async function onSubmit(values: LoginFormValues) {
     setError(null);
-    setIsSubmitting(true);
 
     try {
       const { token } = await apiFetch<LoginResponse>("/api/login", {
         method: "POST",
-        body: { email, password },
+        body: values,
       });
       setToken(token);
       router.push("/admin/posts");
@@ -32,15 +38,13 @@ export default function LoginPage() {
       } else {
         setError("ログインに失敗しました。しばらくしてから再度お試しください");
       }
-    } finally {
-      setIsSubmitting(false);
     }
   }
 
   return (
     <main className="flex min-h-screen items-center justify-center px-4">
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
         className="w-full max-w-sm space-y-4 rounded-lg border border-gray-200 p-6"
       >
         <h1 className="text-lg font-semibold">ログイン</h1>
@@ -51,13 +55,15 @@ export default function LoginPage() {
           </label>
           <input
             id="email"
-            type="email"
+            type="text"
             autoComplete="username"
-            required
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
+            {...register("email", {
+              required: "メールアドレスを入力してください",
+              pattern: { value: /^\S+@\S+\.\S+$/, message: "メールアドレスの形式が正しくありません" },
+            })}
             className="w-full rounded border border-gray-300 px-3 py-2 text-sm"
           />
+          {errors.email && <p className="text-xs text-red-600">{errors.email.message}</p>}
         </div>
 
         <div className="space-y-1">
@@ -68,11 +74,10 @@ export default function LoginPage() {
             id="password"
             type="password"
             autoComplete="current-password"
-            required
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
+            {...register("password", { required: "パスワードを入力してください" })}
             className="w-full rounded border border-gray-300 px-3 py-2 text-sm"
           />
+          {errors.password && <p className="text-xs text-red-600">{errors.password.message}</p>}
         </div>
 
         {error && (
