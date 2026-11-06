@@ -48,6 +48,7 @@
 | タグリンクのプリフェッチ | `TagList.tsx`の全リンクに`prefetch={true}`を指定し、ビューポートに関係なく全タグページを即座にRouter Cacheへ先読みする。[docs/frontend/component-types.md](./frontend/component-types.md)参照 |
 
 | 実装ロードマップ | 確定。[docs/04-implementation-roadmap.md](./04-implementation-roadmap.md) 参照。機能ごとの縦切り（管理画面→公開ページの順）で進め、コミットは機能単位・5ファイル前後。進捗はそのファイルのチェックボックスで管理 |
+| フォームライブラリ | 管理画面の全フォーム（ログイン・タグ・PostForm）でreact-hook-formを採用。`register`/`Controller`でバリデーションを実装（zod等のスキーマライブラリは使わずシンプルに） |
 
 ## 未決定（これから詰める項目）
 
