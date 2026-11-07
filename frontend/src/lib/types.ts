@@ -26,6 +26,18 @@ export type Post = {
   updated_at: string;
 };
 
+/** Public PostResource shape: no `status`; `content`/`updated_at` are present only on the detail (show) endpoint. */
+export type PublicPost = {
+  slug: string;
+  title: string;
+  excerpt: string | null;
+  thumbnail: string | null;
+  tags: string[];
+  created_at: string;
+  content?: string;
+  updated_at?: string;
+};
+
 /** Shape of a Laravel API Resource collection response: { data: T[] }. */
 export type ApiCollection<T> = {
   data: T[];

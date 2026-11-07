@@ -2,6 +2,8 @@ import { clearToken, getToken } from "./auth";
 
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
 
+const API_INTERNAL_BASE_URL = process.env.API_INTERNAL_BASE_URL ?? API_BASE_URL;
+
 export class ApiError extends Error {
   status: number;
   body: unknown;
@@ -32,6 +34,29 @@ export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}): 
   if (res.status === 204) {
     return undefined as T;
   }
+
+  const data = await res.json().catch(() => undefined);
+
+  if (!res.ok) {
+    throw new ApiError(res.status, data);
+  }
+
+  return data as T;
+}
+
+/** Thin fetch wrapper (Server Component → Laravel, over the Docker-internal network). No auth; public endpoints only. */
+export async function publicApiFetch<T>(path: string, options: ApiFetchOptions = {}): Promise<T> {
+  const { body, headers, ...rest } = options;
+
+  const res = await fetch(`${API_INTERNAL_BASE_URL}${path}`, {
+    ...rest,
+    headers: {
+      Accept: "application/json",
+      ...(body !== undefined ? { "Content-Type": "application/json" } : {}),
+      ...headers,
+    },
+    body: body !== undefined ? JSON.stringify(body) : undefined,
+  });
 
   const data = await res.json().catch(() => undefined);
 

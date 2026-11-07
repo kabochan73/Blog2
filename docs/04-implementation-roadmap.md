@@ -56,12 +56,12 @@
 ## フェーズ6: 公開ページ
 
 **backend**
-- [ ] 23. 公開記事API: `Api/PostController.php`(index/show), `PostResource.php`, routes追加
-- [ ] 24. 公開タグAPI: `Api/TagController.php`(index), `TagResource.php`, routes追加
+- [x] 23. 公開記事API: `Api/PostController.php`(index/show), `PostResource.php`, routes追加
+- [x] 24. 公開タグAPI: `Api/TagController.php`(index), `TagResource.php`, routes追加
 
 **frontend**
-- [ ] 25. 共通レイアウト: `app/layout.tsx`, `globals.css`, `tailwind.config.ts`
-- [ ] 26. 記事一覧1ページ目: `(public)/layout.tsx`, `(public)/page.tsx`, `PostCard.tsx`
+- [x] 25. 共通レイアウト: `app/layout.tsx`, `globals.css`, `(public)/layout.tsx`（Tailwind v4のため`tailwind.config.ts`は不要）
+- [x] 26. 記事一覧1ページ目: `(public)/layout.tsx`, `(public)/page.tsx`, `PostCard.tsx`
 - [ ] 27. ページ送り: `page/[n]/page.tsx`, `Pagination.tsx`, `lib/pagination.ts`
 - [ ] 28. 記事詳細: `posts/[slug]/page.tsx`, `MarkdownRenderer.tsx`
 - [ ] 29. 目次(TOC): `TableOfContents.tsx`, 詳細ページへの統合
