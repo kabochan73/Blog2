@@ -48,10 +48,10 @@
 ## フェーズ5: 画像アップロード
 
 **backend**
-- [ ] 21. 画像アップロードAPI: `Admin/ImageController.php`, `UploadImageRequest.php`, `ImageUploadService.php`, `config/filesystems.php`, routes追加
+- [x] 21. 画像アップロードAPI: `Admin/ImageController.php`, `UploadImageRequest.php`, `ImageUploadService.php`（intervention/image、最大幅1600px・品質80）, routes追加
 
 **frontend**
-- [ ] 22. 画像アップロードUI: `ImageUploader.tsx`, `PostForm.tsx`への統合
+- [x] 22. 画像アップロードUI: `ImageUploader.tsx`, `PostForm.tsx`への統合（サムネイル・本文挿入の両方）
 
 ## フェーズ6: 公開ページ
 
