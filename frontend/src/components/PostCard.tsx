@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { API_BASE_URL } from "@/lib/api";
+import { resolveImageUrl } from "@/lib/api";
 import type { PublicPost } from "@/lib/types";
 
 export function PostCard({ post }: { post: PublicPost }) {
@@ -8,7 +8,7 @@ export function PostCard({ post }: { post: PublicPost }) {
       <Link href={`/posts/${post.slug}`} className="flex flex-col gap-3">
         {post.thumbnail && (
           <img
-            src={post.thumbnail.startsWith("/") ? `${API_BASE_URL}${post.thumbnail}` : post.thumbnail}
+            src={resolveImageUrl(post.thumbnail)}
             alt=""
             className="aspect-[2/1] w-full rounded-lg object-cover"
           />
