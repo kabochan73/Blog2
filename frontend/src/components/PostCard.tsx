@@ -20,7 +20,13 @@ export function PostCard({ post }: { post: PublicPost }) {
         <time dateTime={post.created_at}>{new Date(post.created_at).toLocaleDateString("ja-JP")}</time>
         {post.tags.length > 0 && (
           <ul className="flex gap-2">
-            {post.tags.map((tag) => <li key={tag}>#{tag}</li>)}
+            {post.tags.map((tag) => (
+              <li key={tag}>
+                <Link href={`/tags/${tag}`} className="hover:underline">
+                  #{tag}
+                </Link>
+              </li>
+            ))}
           </ul>
         )}
       </div>

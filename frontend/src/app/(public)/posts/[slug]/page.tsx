@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cacheLife } from "next/cache";
 import { ApiError, publicApiFetch, resolveImageUrl } from "@/lib/api";
@@ -62,7 +63,13 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           <time dateTime={post.created_at}>{new Date(post.created_at).toLocaleDateString("ja-JP")}</time>
           {post.tags.length > 0 && (
             <ul className="flex gap-2">
-              {post.tags.map((tag) => <li key={tag}>#{tag}</li>)}
+              {post.tags.map((tag) => (
+                <li key={tag}>
+                  <Link href={`/tags/${tag}`} className="hover:underline">
+                    #{tag}
+                  </Link>
+                </li>
+              ))}
             </ul>
           )}
         </div>

@@ -12,6 +12,12 @@ export type Tag = {
   count: number;
 };
 
+/** Public TagResource shape: no `id` (unlike the admin Tag type above). */
+export type PublicTag = {
+  name: string;
+  count: number;
+};
+
 export type PostStatus = "draft" | "published";
 
 export type Post = {

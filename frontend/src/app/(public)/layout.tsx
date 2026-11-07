@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { TagList } from "@/components/TagList";
 
 export default function PublicLayout({ children }: { children: ReactNode }) {
   return (
@@ -9,6 +10,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
           LOGBOOK.
         </Link>
       </header>
+      <TagList />
       <main className="flex-1 py-8">{children}</main>
     </div>
   );
