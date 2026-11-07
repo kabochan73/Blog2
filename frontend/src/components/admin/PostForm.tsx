@@ -1,22 +1,28 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import dynamic from "next/dynamic";
 import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
 
 import TagPicker from "@/components/admin/TagPicker";
-import type { PostStatus } from "@/lib/types";
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
-export type PostFormValues = {
-  title: string;
-  slug: string;
-  status: PostStatus;
-  tags: string[];
-  excerpt: string;
-  thumbnail: string;
-  content: string;
-};
+const postFormSchema = z.object({
+  title: z.string().min(1, "タイトルを入力してください"),
+  slug: z
+    .string()
+    .min(1, "スラッグを入力してください")
+    .regex(/^[a-z0-9-]+$/, "半角英数字とハイフンのみ使用できます"),
+  status: z.enum(["draft", "published"]),
+  tags: z.array(z.string()),
+  excerpt: z.string(),
+  thumbnail: z.string(),
+  content: z.string().min(1, "本文を入力してください"),
+});
+
+export type PostFormValues = z.infer<typeof postFormSchema>;
 
 const EMPTY_VALUES: PostFormValues = {
   title: "",
@@ -47,7 +53,10 @@ export default function PostForm({ initialValues, submitLabel, onSubmit, isSubmi
     setValue,
     control,
     formState: { errors },
-  } = useForm<PostFormValues>({ defaultValues: initialValues ?? EMPTY_VALUES });
+  } = useForm<PostFormValues>({
+    defaultValues: initialValues ?? EMPTY_VALUES,
+    resolver: zodResolver(postFormSchema),
+  });
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="max-w-3xl space-y-5">
@@ -58,7 +67,7 @@ export default function PostForm({ initialValues, submitLabel, onSubmit, isSubmi
         <input
           id="title"
           type="text"
-          {...register("title", { required: "タイトルを入力してください" })}
+          {...register("title")}
           className="w-full rounded border border-gray-300 px-3 py-2 text-sm"
         />
         {errors.title && <p className="text-xs text-red-600">{errors.title.message}</p>}
@@ -71,10 +80,7 @@ export default function PostForm({ initialValues, submitLabel, onSubmit, isSubmi
         <input
           id="slug"
           type="text"
-          {...register("slug", {
-            required: "スラッグを入力してください",
-            pattern: { value: /^[a-z0-9-]+$/, message: "半角英数字とハイフンのみ使用できます" },
-          })}
+          {...register("slug")}
           onChange={(event) => setValue("slug", normalizeSlug(event.target.value), { shouldValidate: true })}
           className="w-full rounded border border-gray-300 px-3 py-2 text-sm"
         />
@@ -133,7 +139,6 @@ export default function PostForm({ initialValues, submitLabel, onSubmit, isSubmi
         <Controller
           name="content"
           control={control}
-          rules={{ validate: (value) => value.trim().length > 0 || "本文を入力してください" }}
           render={({ field }) => (
             <MDEditor value={field.value} onChange={(value) => field.onChange(value ?? "")} height={400} />
           )}

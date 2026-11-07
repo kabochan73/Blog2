@@ -1,17 +1,21 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import { ApiError, apiFetch } from "@/lib/api";
 import { setToken } from "@/lib/auth";
 import type { LoginResponse } from "@/lib/types";
 
-type LoginFormValues = {
-  email: string;
-  password: string;
-};
+const loginSchema = z.object({
+  email: z.string().min(1, "メールアドレスを入力してください").email("メールアドレスの形式が正しくありません"),
+  password: z.string().min(1, "パスワードを入力してください"),
+});
+
+type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const router = useRouter();
@@ -20,7 +24,7 @@ export default function LoginPage() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginFormValues>();
+  } = useForm<LoginFormValues>({ resolver: zodResolver(loginSchema) });
 
   async function onSubmit(values: LoginFormValues) {
     setError(null);
@@ -57,10 +61,7 @@ export default function LoginPage() {
             id="email"
             type="text"
             autoComplete="username"
-            {...register("email", {
-              required: "メールアドレスを入力してください",
-              pattern: { value: /^\S+@\S+\.\S+$/, message: "メールアドレスの形式が正しくありません" },
-            })}
+            {...register("email")}
             className="w-full rounded border border-gray-300 px-3 py-2 text-sm"
           />
           {errors.email && <p className="text-xs text-red-600">{errors.email.message}</p>}
@@ -74,7 +75,7 @@ export default function LoginPage() {
             id="password"
             type="password"
             autoComplete="current-password"
-            {...register("password", { required: "パスワードを入力してください" })}
+            {...register("password")}
             className="w-full rounded border border-gray-300 px-3 py-2 text-sm"
           />
           {errors.password && <p className="text-xs text-red-600">{errors.password.message}</p>}

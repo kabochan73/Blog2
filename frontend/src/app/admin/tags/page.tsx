@@ -1,15 +1,19 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import { useTagsAdmin } from "@/hooks/admin/tags/useTagsAdmin";
 import { extractErrorMessage } from "@/lib/api";
 import type { Tag } from "@/lib/types";
 
-type TagNameFormValues = {
-  name: string;
-};
+const tagNameSchema = z.object({
+  name: z.string().min(1, "タグ名を入力してください"),
+});
+
+type TagNameFormValues = z.infer<typeof tagNameSchema>;
 
 function TagEditForm({
   tag,
@@ -28,7 +32,7 @@ function TagEditForm({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<TagNameFormValues>({ defaultValues: { name: tag.name } });
+  } = useForm<TagNameFormValues>({ defaultValues: { name: tag.name }, resolver: zodResolver(tagNameSchema) });
 
   function onSubmit(values: TagNameFormValues) {
     onSave(values.name.trim());
@@ -36,11 +40,7 @@ function TagEditForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-1 items-center gap-2">
-      <input
-        type="text"
-        {...register("name", { required: "タグ名を入力してください" })}
-        className="flex-1 rounded border border-gray-300 px-2 py-1"
-      />
+      <input type="text" {...register("name")} className="flex-1 rounded border border-gray-300 px-2 py-1" />
       <button type="submit" disabled={isPending} className="text-gray-900">
         保存
       </button>
@@ -56,7 +56,7 @@ function TagEditForm({
 export default function AdminTagsPage() {
   const { tagsQuery, createTag, updateTag, deleteTag } = useTagsAdmin();
   const [editingId, setEditingId] = useState<number | null>(null);
-  const createForm = useForm<TagNameFormValues>();
+  const createForm = useForm<TagNameFormValues>({ resolver: zodResolver(tagNameSchema) });
 
   function onCreate(values: TagNameFormValues) {
     createTag.mutate(values.name.trim(), { onSuccess: () => createForm.reset() });
@@ -69,7 +69,7 @@ export default function AdminTagsPage() {
       <form onSubmit={createForm.handleSubmit(onCreate)} className="flex gap-2">
         <input
           type="text"
-          {...createForm.register("name", { required: "タグ名を入力してください" })}
+          {...createForm.register("name")}
           placeholder="新しいタグ名"
           className="flex-1 rounded border border-gray-300 px-3 py-2 text-sm"
         />
