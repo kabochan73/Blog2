@@ -43,6 +43,20 @@ export type ApiCollection<T> = {
   data: T[];
 };
 
+/** Laravel paginator's `meta` block, as returned by `paginate()`-backed resource collections. */
+export type PaginationMeta = {
+  current_page: number;
+  last_page: number;
+  per_page: number;
+  total: number;
+};
+
+/** Shape of a paginated Laravel API Resource collection response: { data: T[], meta }. */
+export type PaginatedCollection<T> = {
+  data: T[];
+  meta: PaginationMeta;
+};
+
 /** Shape of a single Laravel API Resource response: { data: T }. */
 export type ApiResource<T> = {
   data: T;
