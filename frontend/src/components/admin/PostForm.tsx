@@ -2,10 +2,12 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import dynamic from "next/dynamic";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
+import ImageUploader from "@/components/admin/ImageUploader";
 import TagPicker from "@/components/admin/TagPicker";
+import { API_BASE_URL } from "@/lib/api";
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
@@ -51,12 +53,24 @@ export default function PostForm({ initialValues, submitLabel, onSubmit, isSubmi
     register,
     handleSubmit,
     setValue,
+    getValues,
     control,
     formState: { errors },
   } = useForm<PostFormValues>({
     defaultValues: initialValues ?? EMPTY_VALUES,
     resolver: zodResolver(postFormSchema),
   });
+
+  const thumbnail = useWatch({ control, name: "thumbnail" });
+
+  function handleThumbnailUploaded(url: string) {
+    setValue("thumbnail", url, { shouldValidate: true });
+  }
+
+  function handleContentImageUploaded(url: string) {
+    const current = getValues("content");
+    setValue("content", `${current}\n\n![](${url})\n`, { shouldValidate: true });
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="max-w-3xl space-y-5">
@@ -114,12 +128,23 @@ export default function PostForm({ initialValues, submitLabel, onSubmit, isSubmi
         <label htmlFor="thumbnail" className="block text-sm font-medium">
           サムネイル画像URL（任意）
         </label>
-        <input
-          id="thumbnail"
-          type="text"
-          {...register("thumbnail")}
-          className="w-full rounded border border-gray-300 px-3 py-2 text-sm"
-        />
+        <div className="flex items-center gap-3">
+          <input
+            id="thumbnail"
+            type="text"
+            {...register("thumbnail")}
+            className="w-full rounded border border-gray-300 px-3 py-2 text-sm"
+          />
+          <ImageUploader onUploaded={handleThumbnailUploaded} label="アップロード" />
+        </div>
+        {thumbnail && (
+          /* eslint-disable-next-line @next/next/no-img-element -- admin-only preview, not the public blog */
+          <img
+            src={thumbnail.startsWith("/") ? `${API_BASE_URL}${thumbnail}` : thumbnail}
+            alt="サムネイルプレビュー"
+            className="mt-2 h-32 w-auto rounded border border-gray-200"
+          />
+        )}
       </div>
 
       <div className="space-y-1">
@@ -135,7 +160,10 @@ export default function PostForm({ initialValues, submitLabel, onSubmit, isSubmi
       </div>
 
       <div className="space-y-1" data-color-mode="light">
-        <span className="block text-sm font-medium">本文</span>
+        <div className="flex items-center justify-between">
+          <span className="block text-sm font-medium">本文</span>
+          <ImageUploader onUploaded={handleContentImageUploaded} label="本文に画像を挿入" />
+        </div>
         <Controller
           name="content"
           control={control}

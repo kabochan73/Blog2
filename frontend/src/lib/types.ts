@@ -2,6 +2,10 @@ export type LoginResponse = {
   token: string;
 };
 
+export type ImageUploadResponse = {
+  url: string;
+};
+
 export type Tag = {
   id: number;
   name: string;

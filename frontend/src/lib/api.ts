@@ -1,6 +1,6 @@
 import { clearToken, getToken } from "./auth";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
 
 export class ApiError extends Error {
   status: number;
@@ -63,6 +63,36 @@ export async function adminApiFetch<T>(path: string, options: ApiFetchOptions = 
     }
     throw err;
   }
+}
+
+/** multipart/form-data upload (browser → Laravel), with the same auth/401 handling as adminApiFetch. */
+export async function adminUploadFile<T>(path: string, file: File, fieldName = "image"): Promise<T> {
+  const token = getToken();
+  const formData = new FormData();
+  formData.append(fieldName, file);
+
+  const res = await fetch(`${API_BASE_URL}${path}`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: formData,
+  });
+
+  const data = await res.json().catch(() => undefined);
+
+  if (!res.ok) {
+    if (res.status === 401) {
+      clearToken();
+      if (typeof window !== "undefined") {
+        window.location.href = "/login";
+      }
+    }
+    throw new ApiError(res.status, data);
+  }
+
+  return data as T;
 }
 
 /** Pulls Laravel's validation/error "message" out of a caught error, for display in a form. */
