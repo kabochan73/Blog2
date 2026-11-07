@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { useTagsAdmin } from "@/hooks/admin/useTagsAdmin";
+import { useTagsAdmin } from "@/hooks/admin/tags/useTagsAdmin";
 import { extractErrorMessage } from "@/lib/api";
 import type { Tag } from "@/lib/types";
 

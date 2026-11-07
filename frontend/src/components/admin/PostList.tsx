@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import { usePostsAdmin } from "@/hooks/admin/usePostsAdmin";
+import { usePostsAdmin } from "@/hooks/admin/posts/usePostsAdmin";
 import type { PostStatus } from "@/lib/types";
 
 export default function PostList({ status }: { status: PostStatus }) {

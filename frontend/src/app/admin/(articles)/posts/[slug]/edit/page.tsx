@@ -3,16 +3,12 @@
 import { use } from "react";
 
 import PostForm, { type PostFormValues } from "@/components/admin/PostForm";
-import { useDeletePost } from "@/hooks/admin/useDeletePost";
-import { usePostAdmin } from "@/hooks/admin/usePostAdmin";
-import { useUpdatePost } from "@/hooks/admin/useUpdatePost";
+import { usePostEditor } from "@/hooks/admin/posts/usePostEditor";
 import { extractErrorMessage } from "@/lib/api";
 
 export default function EditPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
-  const postQuery = usePostAdmin(slug);
-  const updatePost = useUpdatePost(slug);
-  const deletePost = useDeletePost();
+  const { postQuery, updatePost, deletePost } = usePostEditor(slug);
 
   function handleSubmit(values: PostFormValues) {
     updatePost.mutate(values);
@@ -22,7 +18,7 @@ export default function EditPostPage({ params }: { params: Promise<{ slug: strin
     if (!window.confirm("この記事を削除しますか？")) {
       return;
     }
-    deletePost.mutate(slug);
+    deletePost.mutate();
   }
 
   if (postQuery.isLoading) {

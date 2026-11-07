@@ -1,6 +1,6 @@
 "use client";
 
-import { useTagsList } from "@/hooks/admin/useTagsList";
+import { useTagsList } from "@/hooks/admin/tags/useTagsList";
 
 type TagPickerProps = {
   value: string[];

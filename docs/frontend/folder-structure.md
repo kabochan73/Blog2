@@ -21,11 +21,12 @@ frontend/
 │   │   │   └── sitemap.ts                  # /sitemap.xml
 │   │   └── admin/
 │   │       ├── layout.tsx                  # ルーティング専用のServer Component。instant=falseでCache Components検証を除外
-│   │       ├── posts/
-│   │       │   ├── page.tsx                # 公開記事一覧
-│   │       │   ├── new/page.tsx            # 新規作成
-│   │       │   └── [slug]/edit/page.tsx    # 編集・削除
-│   │       ├── drafts/page.tsx             # 下書き一覧
+│   │       ├── (articles)/                 # ルートグループ。URLには影響しない（AdminHeaderのArticlesタブに対応する整理用）
+│   │       │   ├── posts/
+│   │       │   │   ├── page.tsx            # 公開記事一覧
+│   │       │   │   ├── new/page.tsx        # 新規作成
+│   │       │   │   └── [slug]/edit/page.tsx # 編集・削除
+│   │       │   └── drafts/page.tsx         # 下書き一覧
 │   │       └── tags/page.tsx               # タグ管理
 │   ├── components/
 │   │   ├── PostCard.tsx
@@ -41,12 +42,13 @@ frontend/
 │   │       └── AdminShell.tsx              # 認証ガード＋Providers＋AdminHeaderの実体（admin/layout.tsxから分離したClient Component）
 │   ├── hooks/                               # カスタムフック（データ取得・変更ロジック）
 │   │   └── admin/
-│   │       ├── useTagsAdmin.ts
-│   │       ├── useTagsList.ts
-│   │       ├── usePostsAdmin.ts
-│   │       ├── usePostAdmin.ts
-│   │       ├── useCreatePost.ts
-│   │       └── useUpdatePost.ts / useDeletePost.ts
+│   │       ├── posts/
+│   │       │   ├── usePostsAdmin.ts        # 一覧取得（PostListで単独使用）
+│   │       │   ├── useCreatePost.ts        # 作成（新規作成ページで単独使用）
+│   │       │   └── usePostEditor.ts        # 詳細取得+更新+削除（編集ページで常にセット使用、まとめた）
+│   │       └── tags/
+│   │           ├── useTagsAdmin.ts
+│   │           └── useTagsList.ts
 │   └── lib/
 │       ├── api.ts                          # 公開APIと管理APIのfetchラッパー
 │       ├── auth.ts                         # トークンのlocalStorage読み書き

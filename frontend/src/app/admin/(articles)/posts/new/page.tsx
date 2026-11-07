@@ -1,7 +1,7 @@
 "use client";
 
 import PostForm, { type PostFormValues } from "@/components/admin/PostForm";
-import { useCreatePost } from "@/hooks/admin/useCreatePost";
+import { useCreatePost } from "@/hooks/admin/posts/useCreatePost";
 import { extractErrorMessage } from "@/lib/api";
 
 export default function NewPostPage() {

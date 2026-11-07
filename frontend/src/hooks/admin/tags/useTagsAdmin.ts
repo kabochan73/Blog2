@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { useTagsList } from "@/hooks/admin/useTagsList";
+import { useTagsList } from "@/hooks/admin/tags/useTagsList";
 import { adminApiFetch } from "@/lib/api";
 import type { ApiResource, Tag } from "@/lib/types";
 
