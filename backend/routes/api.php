@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\ImageController;
 use App\Http\Controllers\Api\Admin\PostController;
 use App\Http\Controllers\Api\Admin\TagController;
 use App\Http\Controllers\Api\AuthController;
@@ -14,5 +15,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('tags', TagController::class)->only(['index', 'store', 'update', 'destroy']);
 
         Route::apiResource('posts', PostController::class);
+
+        Route::post('images', [ImageController::class, 'store']);
     });
 });
