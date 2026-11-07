@@ -64,7 +64,7 @@
 - [x] 26. 記事一覧1ページ目: `(public)/layout.tsx`, `(public)/page.tsx`, `PostCard.tsx`
 - [x] 27. ページ送り: `page/[n]/page.tsx`, `Pagination.tsx`, `lib/pagination.ts`
 - [x] 28. 記事詳細: `posts/[slug]/page.tsx`, `MarkdownRenderer.tsx`
-- [ ] 29. 目次(TOC): `TableOfContents.tsx`, 詳細ページへの統合
+- [x] 29. 目次(TOC): `TableOfContents.tsx`, 詳細ページへの統合
 - [ ] 30. タグ別一覧: `tags/[tag]/page.tsx`, `tags/[tag]/page/[n]/page.tsx`, `TagList.tsx`（prefetch付き）
 
 ## フェーズ7: 仕上げ

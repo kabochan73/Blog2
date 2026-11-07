@@ -1,10 +1,23 @@
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeSlug from "rehype-slug";
 
 const components: Components = {
-  h1: ({ children }) => <h1 className="mt-10 mb-4 text-2xl font-bold tracking-tight">{children}</h1>,
-  h2: ({ children }) => <h2 className="mt-8 mb-3 text-xl font-bold tracking-tight">{children}</h2>,
-  h3: ({ children }) => <h3 className="mt-6 mb-2 text-lg font-semibold tracking-tight">{children}</h3>,
+  h1: ({ id, children }) => (
+    <h1 id={id} className="mt-10 mb-4 text-2xl font-bold tracking-tight">
+      {children}
+    </h1>
+  ),
+  h2: ({ id, children }) => (
+    <h2 id={id} className="mt-8 mb-3 text-xl font-bold tracking-tight">
+      {children}
+    </h2>
+  ),
+  h3: ({ id, children }) => (
+    <h3 id={id} className="mt-6 mb-2 text-lg font-semibold tracking-tight">
+      {children}
+    </h3>
+  ),
   p: ({ children }) => <p className="my-4 leading-7">{children}</p>,
   a: ({ href, children }) => (
     <a href={href} className="underline hover:no-underline" target="_blank" rel="noopener noreferrer">
@@ -36,7 +49,7 @@ const components: Components = {
 export function MarkdownRenderer({ content }: { content: string }) {
   return (
     <div>
-      <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
+      <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSlug]} components={components}>
         {content}
       </ReactMarkdown>
     </div>

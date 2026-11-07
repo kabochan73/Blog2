@@ -3,7 +3,9 @@ import { notFound } from "next/navigation";
 import { cacheLife } from "next/cache";
 import { ApiError, publicApiFetch, resolveImageUrl } from "@/lib/api";
 import type { ApiCollection, ApiResource, PublicPost } from "@/lib/types";
+import { extractHeadings } from "@/lib/markdown";
 import { MarkdownRenderer } from "@/components/MarkdownRenderer";
+import { TableOfContents } from "@/components/TableOfContents";
 
 export async function generateStaticParams() {
   const { data: posts } = await publicApiFetch<ApiCollection<PublicPost>>("/api/posts?per_page=9999");
@@ -65,6 +67,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           )}
         </div>
       </div>
+      <TableOfContents headings={extractHeadings(post.content ?? "")} />
       <MarkdownRenderer content={post.content ?? ""} />
     </article>
   );
